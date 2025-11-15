@@ -91,7 +91,7 @@ def telainicial():
         else:
             bandeira_x -= 4
         bandeira.rect.x = bandeira_x
-        bandeira.printa_bandeira(0.2)
+        bandeira.printa_bandeira(0.1)
         movimento_bandeira.draw(gameDisplay)
 
         pygame.display.update()

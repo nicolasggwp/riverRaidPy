@@ -8,7 +8,7 @@ class Bandeira_animação(pygame.sprite.Sprite):
         self.bandeiras.append(pygame.image.load("sprites/animação/bandeira/bandeira_1.png"))
         self.bandeiras.append(pygame.image.load("sprites/animação/bandeira/bandeira_2.png"))
         self.bandeiras.append(pygame.image.load("sprites/animação/bandeira/bandeira_3.png"))
-        #self.bandeiras.append(pygame.image.load("sprites/animação/bandeira/bandeira_4.png"))
+        self.bandeiras.append(pygame.image.load("sprites/animação/bandeira/bandeira_4.png"))
         self.bandeiras.append(pygame.image.load("sprites/animação/bandeira/bandeira_3.png"))
         self.bandeiras.append(pygame.image.load("sprites/animação/bandeira/bandeira_2.png"))
         self.bandeiras.append(pygame.image.load("sprites/animação/bandeira/bandeira_1.png"))
