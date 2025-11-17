@@ -1,4 +1,5 @@
 import pygame, random
+
 class Nuvens_tela():
     def gera_nuvem_tela():
         caminhos = [

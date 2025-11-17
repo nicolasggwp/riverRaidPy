@@ -4,6 +4,8 @@ from classes.helic import *
 from classes.helicopter_tela import Helicoptero_tela
 from classes.bandeira import Bandeira_animação
 from classes.nuvem_tela import Nuvens_tela
+from classes.selecao import Selecao, EstadoJogo
+from classes.gasolina import Gasolina
 
 pygame.init() 
 largurat = 800
@@ -24,6 +26,11 @@ lastShot = 0
 helicopteros = pygame.sprite.Group()
 posicoes = []
 
+gas = Gasolina.gera_gasolina(mapa)
+
+estado_atual = EstadoJogo.SELECAO_PRINCIPAL
+selecionado = 0
+
 def gera_heli_tela(qnt):
     for i in range(qnt):
         posicoes.append([-1*random.randint(0, 1000), random.randint(0, 500)])
@@ -38,27 +45,35 @@ def gera_nuvem(qnt):
         nuvens.append((imagem, rect))
     return nuvens
 
-def telainicial():
-    bandeira_x = 500
-    bandeira_y = 100
+def selecao_desenho():
+    if estado_atual == EstadoJogo.SELECAO_PRINCIPAL:
+        Selecao().desenhar_selecao(gameDisplay, selecionado, "principal")
+    
+    elif estado_atual == EstadoJogo.SELECAO_DIFICULDADE:
+        Selecao().desenhar_selecao(gameDisplay, selecionado, "dificuldade")
 
-    gera_heli_tela(5)
+def telainicial():
+    global estado_atual, selecionado
+
+    img_fundo = pygame.image.load("sprites/fundo.png")
+    fundo = pygame.transform.scale(img_fundo, (800, 600))
+    
+
+    gera_heli_tela(10)
+
     nuvem = gera_nuvem(7)
 
+    bandeira_x = 500
+    bandeira_y = 50
     bandeira = Bandeira_animação(bandeira_x, bandeira_y)
     movimento_bandeira = pygame.sprite.Group(bandeira)
 
     while True:
         tempo.tick(30)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_u:
-                    return
+
         gameDisplay.fill("royalblue4")
-   
+        gameDisplay.blit(fundo, (0, 0))
+
         #=======Nuvens====== 
         for imagem, rect in nuvem:
             rect.x += 2
@@ -94,6 +109,48 @@ def telainicial():
         bandeira.printa_bandeira(0.1)
         movimento_bandeira.draw(gameDisplay)
 
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            #=======SELEÇÃO=======
+            elif evento.type == pygame.KEYDOWN:
+                if estado_atual == EstadoJogo.SELECAO_PRINCIPAL:
+                    if evento.key == pygame.K_UP or evento.key == pygame.K_w:
+                        selecionado = (selecionado - 1) % 2
+                        print(selecionado)
+                    elif evento.key == pygame.K_DOWN or evento.key == pygame.K_s:
+                        selecionado = (selecionado + 1) % 2
+                        print(selecionado)
+                    elif evento.key == pygame.K_RETURN:
+                        if selecionado == 0: 
+                            estado_atual = EstadoJogo.SELECAO_DIFICULDADE
+                            selecionado = 0
+                        elif selecionado == 1:  
+                            pygame.quit()
+                            quit()
+                        
+                elif estado_atual == EstadoJogo.SELECAO_DIFICULDADE:
+                    if evento.key == pygame.K_UP:
+                        selecionado = (selecionado - 1) % 4
+                        print(selecionado)
+                    elif evento.key == pygame.K_DOWN:
+                        selecionado = (selecionado + 1) % 4
+                        print(selecionado)
+                    elif evento.key == pygame.K_BACKSPACE:
+                        estado_atual = EstadoJogo.SELECAO_PRINCIPAL
+                        selecionado = 0
+                    elif evento.key == pygame.K_RETURN:
+                        if selecionado == 0:    # FÁCIL
+                            return
+                        elif selecionado == 1:  # NORMAL
+                            return
+                        elif selecionado == 2:  # DIFÍCIL
+                            return
+                        elif selecionado == 3:  # Deleta jogo
+                            return
+        selecao_desenho()
+
         pygame.display.update()
 
 telainicial()
@@ -108,6 +165,7 @@ while True:
     tempo.tick(30)
 
     tecla = pygame.key.get_pressed()
+    SETACIMA = pygame.key.get_pressed()
 
     player.imprimir()
     player.movPlayer(tecla)
@@ -130,8 +188,33 @@ while True:
     for helic in helic_list:
         helic.imprimir()
         helic.movHoriz()
-        helic.queda(tecla)
-        if helic.y < -32:
+        helic.queda(SETACIMA)
+        for bala in balas:
+            col = helic.colisaoRect(bala)
+            if col == True:
+                helic_list.remove(helic)
+                balas.remove(bala)
+        if helic.y > 832:
             helic_list.remove(helic)
+        if helic.y < -50:
+            helic_list.remove(helic)
+
+        col_player = helic.colisaoMask(player)
+        '''if col_player == True:
+            sys.exit()'''
+    #gera gasolina
+    for gasolina in gas:
+        gasolina.queda(tecla)
+        gasolina.imprimir()
+
+        if player.colisaoMask(gasolina):
+            gasolina.coleta = True
+            gas.remove(gasolina)
+        
+        if gasolina.y > 600:
+            gas.remove(gasolina)
+    if len(gas) < 1:
+        novas_gasolinas = Gasolina.gera_gasolina(fase)
+        gas.extend(novas_gasolinas)
 
     pygame.display.update()
