@@ -1,15 +1,14 @@
 import pygame
 import random
 
-class Helicoptero_tela(pygame.sprite.Sprite):
+class Helicoptero_tela():
     def __init__(self, pos_anim_x, pos_anim_y):
-        super().__init__()
-        self.heli = []
-        self.heli.append(pygame.image.load("sprites/animação/heli\helic3.png"))
-        self.heli.append(pygame.image.load("sprites/animação/heli\helic2.png"))
-        self.heli.append(pygame.image.load("sprites/animação/heli\helic1.png"))
-        self.heli.append(pygame.image.load("sprites/animação/heli\helic0.png"))
-        
+        self.heli = [
+            pygame.image.load("sprites/animação/heli/helic3.png"),
+            pygame.image.load("sprites/animação/heli/helic2.png"),
+            pygame.image.load("sprites/animação/heli/helic1.png"),
+            pygame.image.load("sprites/animação/heli/helic0.png")
+            ]
         tamanho = random.randint(32, 64)
 
         for i in range(len(self.heli)):

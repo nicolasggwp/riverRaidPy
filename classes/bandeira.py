@@ -3,15 +3,16 @@ import pygame
 class Bandeira_animação(pygame.sprite.Sprite):
     def __init__(self, pos_anim_x, pos_anim_y):
         super().__init__()
-        self.bandeiras = []
-        self.bandeiras.append(pygame.image.load("sprites/animação/bandeira/bandeira_0.png"))
-        self.bandeiras.append(pygame.image.load("sprites/animação/bandeira/bandeira_1.png"))
-        self.bandeiras.append(pygame.image.load("sprites/animação/bandeira/bandeira_2.png"))
-        self.bandeiras.append(pygame.image.load("sprites/animação/bandeira/bandeira_3.png"))
-        self.bandeiras.append(pygame.image.load("sprites/animação/bandeira/bandeira_4.png"))
-        self.bandeiras.append(pygame.image.load("sprites/animação/bandeira/bandeira_3.png"))
-        self.bandeiras.append(pygame.image.load("sprites/animação/bandeira/bandeira_2.png"))
-        self.bandeiras.append(pygame.image.load("sprites/animação/bandeira/bandeira_1.png"))
+        self.bandeiras = [
+            pygame.image.load("sprites/animação/bandeira/bandeira_0.png"),
+            pygame.image.load("sprites/animação/bandeira/bandeira_1.png"),
+            pygame.image.load("sprites/animação/bandeira/bandeira_2.png"),
+            pygame.image.load("sprites/animação/bandeira/bandeira_3.png"),
+            pygame.image.load("sprites/animação/bandeira/bandeira_4.png"),
+            pygame.image.load("sprites/animação/bandeira/bandeira_3.png"),
+            pygame.image.load("sprites/animação/bandeira/bandeira_2.png"),
+            pygame.image.load("sprites/animação/bandeira/bandeira_1.png")
+        ]
         self.imagem_inicial = 0
         self.animado = self.bandeiras[self.imagem_inicial]
 
